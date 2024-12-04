@@ -1,24 +1,28 @@
-import csv
+import re
 
-sum_of_valid = 0
+with open("3_input.txt", "r") as file:
+    content = file.read()
 
-for row in csv.reader(open("2_input.txt"), delimiter=" "):
-    numbers_2 = [int(x) for x in row]
-    good = False
-    for i in range(len(numbers_2)):
-        numbers = numbers_2[:i] + numbers_2[i + 1 :]
-        print(numbers, " ", numbers_2)
-        inc_or_dec = numbers == sorted(numbers) or numbers == sorted(
-            numbers, reverse=True
-        )
-        ok = True
-        for j in range(len(numbers) - 1):
-            difference = abs(numbers[j] - numbers[j + 1])
-            if not 1 <= difference <= 3:
-                ok = False
-        if inc_or_dec and ok:
-            good = True
-    if good:
-        sum_of_valid += 1
+ans = 0
+initial_pattern = r"do\(\).*?don't\(\)"
+content = content.replace("\n", "")
+content = content.replace(" ", "")
+print(content)
+matches2 = re.findall(initial_pattern, content)
+pattern = r"mul\([0-9]+,[0-9]+\)"
+matches2 = "".join(matches2)
+matches = re.findall(pattern, matches2)
+print(matches, len(matches))
+for match in matches:
+    match = match.replace("mul", "")
+    match = match.replace("(", "")
+    match = match.replace(")", "")
+    index = match.find(",")
+    ans += int(match[:index]) * int(match[index + 1 :])
+print(ans)
 
-print(sum_of_valid)
+# 50272739 without first do
+# 57487139 with first do
+# 57487139 after changes
+# 88802350 Should be the correct answer
+# 86056442 Somehow? XD
